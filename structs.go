@@ -19,12 +19,14 @@ type IDTag struct {
 	title          string            //Title
 	year           string            //Year
 	bpm            string            //BPM
+	track          string            //Track
 	idTagExtended  IDTagExtended     //Extended subset of tags
 	fileUrl        string            //The filepath of the file
 	codec          string            //The codec of the file (ogg use only)
 	passThroughMap map[string]string //A map of unmapped values not yet supported (ogg use only)
 }
-//The IDTagExtended contains an extended set of attributes that an IDTag may contain
+
+// The IDTagExtended contains an extended set of attributes that an IDTag may contain
 type IDTagExtended struct {
 	copyrightMsg string //Copyright Message
 	date         string //Date
@@ -37,7 +39,7 @@ type IDTagExtended struct {
 	publisher    string //Publisher
 }
 
-//The Picture type contains a byte representation of an image
+// The Picture type contains a byte representation of an image
 type Picture struct {
 	Ext         string // Extension of the picture file.
 	MIMEType    string // MIMEType of the picture.

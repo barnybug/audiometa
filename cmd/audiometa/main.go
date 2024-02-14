@@ -88,6 +88,10 @@ func main() {
 					fmt.Printf("Publisher: %s\n", tag.Publisher())
 					printedTags++
 				}
+				if tag.Track() != "" {
+					fmt.Printf("Track: %s\n", tag.Track())
+					printedTags++
+				}
 				if tag.Title() != "" {
 					fmt.Printf("Title: %s\n", tag.Title())
 					printedTags++
@@ -114,7 +118,7 @@ func main() {
 					}
 					for i := 2; i < len(args); i += 2 {
 						cmdTag := strings.ToLower(args[i])
-						writeTag := strings.ToLower(args[i+1])
+						writeTag := args[i+1]
 						if cmdTag == "art" || cmdTag == "-art" || cmdTag == "artist" || cmdTag == "-artist" {
 							tag.SetArtist(writeTag)
 						} else if cmdTag == "aa" || cmdTag == "-aa" || cmdTag == "-albumartist" || cmdTag == "albumartist" {
@@ -131,6 +135,8 @@ func main() {
 							tag.SetGenre(writeTag)
 						} else if cmdTag == "t" || cmdTag == "-t" || cmdTag == "title" || cmdTag == "-title" {
 							tag.SetTitle(writeTag)
+						} else if cmdTag == "track" || cmdTag == "-track" {
+							tag.SetTrack(writeTag)
 						} else if cmdTag == "y" || cmdTag == "-y" || cmdTag == "-year" || cmdTag == "year" {
 							tag.SetYear(writeTag)
 						} else if cmdTag == "b" || cmdTag == "-b" || cmdTag == "bpm" || cmdTag == "-bpm" {

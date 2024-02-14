@@ -12,7 +12,7 @@ import (
 	"github.com/go-flac/go-flac"
 )
 
-//Save saves the corresponding IDTag to the audio file that it references and returns an error if the saving process fails
+// Save saves the corresponding IDTag to the audio file that it references and returns an error if the saving process fails
 func (tag *IDTag) Save() error {
 	fileType, err := GetFileType(tag.fileUrl)
 	if err != nil {
@@ -199,6 +199,12 @@ func (tag *IDTag) Save() error {
 		_, idx := extractFLACComment(tag.fileUrl)
 		cmts := flacvorbis.New()
 		err = cmts.Add(flacvorbis.FIELD_TITLE, tag.title)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+
+		err = cmts.Add(flacvorbis.FIELD_TRACKNUMBER, tag.track)
 		if err != nil {
 			log.Println(err)
 			return err

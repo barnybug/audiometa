@@ -164,36 +164,20 @@ func parse(filepath string) (*IDTag, error) {
 		resultTag = IDTag{}
 		if cmts != nil {
 			for _, cmt := range cmts.Comments {
-				if strings.HasPrefix(cmt, "album=") {
-					tag := strings.Replace(cmt, "album=", "", 1)
-					resultTag.album = tag
-				} else if strings.HasPrefix(cmt, "ALBUM=") {
-					tag := strings.Replace(cmt, "ALBUM=", "", 1)
-					resultTag.album = tag
-				} else if strings.HasPrefix(cmt, "artist=") {
-					tag := strings.Replace(cmt, "artist=", "", 1)
-					resultTag.artist = tag
-				} else if strings.HasPrefix(cmt, "ARTIST=") {
-					tag := strings.Replace(cmt, "ARTIST=", "", 1)
-					resultTag.artist = tag
-				} else if strings.HasPrefix(cmt, "date=") {
-					tag := strings.Replace(cmt, "date=", "", 1)
-					resultTag.idTagExtended.date = tag
-				} else if strings.HasPrefix(cmt, "DATE=") {
-					tag := strings.Replace(cmt, "DATE=", "", 1)
-					resultTag.idTagExtended.date = tag
-				} else if strings.HasPrefix(cmt, "title=") {
-					tag := strings.Replace(cmt, "title=", "", 1)
-					resultTag.title = tag
-				} else if strings.HasPrefix(cmt, "TITLE=") {
-					tag := strings.Replace(cmt, "TITLE=", "", 1)
-					resultTag.title = tag
-				} else if strings.HasPrefix(cmt, "genre=") {
-					tag := strings.Replace(cmt, "genre=", "", 1)
-					resultTag.genre = tag
-				} else if strings.HasPrefix(cmt, "GENRE=") {
-					tag := strings.Replace(cmt, "GENRE=", "", 1)
-					resultTag.genre = tag
+				split := strings.SplitN(cmt, "=", 2)
+				switch strings.ToLower(split[0]) {
+				case "album":
+					resultTag.album = split[1]
+				case "artist":
+					resultTag.artist = split[1]
+				case "date":
+					resultTag.idTagExtended.date = split[1]
+				case "title":
+					resultTag.title = split[1]
+				case "genre":
+					resultTag.genre = split[1]
+				case "tracknumber":
+					resultTag.track = split[1]
 				}
 			}
 		}
