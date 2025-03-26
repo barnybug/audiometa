@@ -16,8 +16,8 @@ import (
 )
 
 var (
-	vorbisCommentPrefix = []byte("\x03vorbis")
-	opusTagsPrefix      = []byte("OpusTags")
+	vorbisCommentPrefix  = []byte("\x03vorbis")
+	opusTagsPrefix       = []byte("OpusTags")
 	oggCRC32Poly04c11db7 = oggCRCTable(0x04c11db7)
 )
 
@@ -205,7 +205,7 @@ func (m *metadataVorbis) readVorbisComment(r io.Reader) (*IDTag, error) {
 		split := strings.Split(cmt, "=")
 		if len(split) == 2 {
 			temp := strings.ToUpper(split[0])
-			if temp != "ALBUM" && temp != "ARTIST" && temp != "ALBUMARTIST" && temp != "DATE" && temp != "TITLE" && temp != "GENRE" && temp != "COMMENT" && temp != "COPYRIGHT" && temp != "PUBLISHER" {
+			if temp != "ALBUM" && temp != "ARTIST" && temp != "ALBUMARTIST" && temp != "DATE" && temp != "TITLE" && temp != "GENRE" && temp != "COMMENT" && temp != "COPYRIGHT" && temp != "PUBLISHER" && temp != "TRACKNUMBER" {
 				resultTag.passThroughMap[temp] = split[1]
 			} else {
 				m.c[temp] = split[1]
@@ -217,6 +217,7 @@ func (m *metadataVorbis) readVorbisComment(r io.Reader) (*IDTag, error) {
 	resultTag.albumArtist = m.c["ALBUMARTIST"]
 	resultTag.idTagExtended.date = m.c["DATE"]
 	resultTag.title = m.c["TITLE"]
+	resultTag.track = m.c["TRACKNUMBER"]
 	resultTag.genre = m.c["GENRE"]
 	resultTag.comments = m.c["COMMENT"]
 	resultTag.idTagExtended.copyrightMsg = m.c["COPYRIGHT"]
@@ -429,11 +430,7 @@ func saveOpusTags(tag *IDTag) error {
 	decoder := newOggDecoder(inputFile)
 
 	// Step 3: Create a temporary output file
-	tempOut, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-	tempOut += "/output_file.ogg"
+	tempOut := tag.fileUrl + ".tmp"
 	outputFile, err := os.Create(tempOut)
 	if err != nil {
 		return err
@@ -475,8 +472,11 @@ func saveOpusTags(tag *IDTag) error {
 			if tag.title != "" {
 				commentFields = append(commentFields, "TITLE="+tag.title)
 			}
+			if tag.track != "" {
+				commentFields = append(commentFields, "TRACKNUMBER="+tag.track)
+			}
 			if tag.idTagExtended.date != "" {
-				commentFields = append(commentFields, "DATE="+tag.title)
+				commentFields = append(commentFields, "DATE="+tag.idTagExtended.date)
 			}
 			if tag.albumArtist != "" {
 				commentFields = append(commentFields, "ALBUMARTIST="+tag.albumArtist)
@@ -490,7 +490,7 @@ func saveOpusTags(tag *IDTag) error {
 			if tag.idTagExtended.copyrightMsg != "" {
 				commentFields = append(commentFields, "COPYRIGHT="+tag.idTagExtended.copyrightMsg)
 			}
-			if tag.composer != ""{
+			if tag.composer != "" {
 				commentFields = append(commentFields, "COMPOSER="+tag.composer)
 			}
 			for key, value := range tag.passThroughMap {
@@ -714,7 +714,7 @@ func saveVorbisTags(tag *IDTag) error {
 			if tag.idTagExtended.publisher != "" {
 				commentFields = append(commentFields, "PUBLISHER="+tag.idTagExtended.publisher)
 			}
-			if tag.composer != ""{
+			if tag.composer != "" {
 				commentFields = append(commentFields, "COMPOSER="+tag.composer)
 			}
 			if tag.idTagExtended.copyrightMsg != "" {

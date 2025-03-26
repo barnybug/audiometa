@@ -210,6 +210,12 @@ func (tag *IDTag) Save() error {
 			return err
 		}
 
+		err = cmts.Add(flacvorbis.FIELD_DATE, tag.idTagExtended.date)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+
 		err = cmts.Add(flacvorbis.FIELD_ALBUM, tag.album)
 		if err != nil {
 			log.Println(err)
@@ -259,11 +265,11 @@ func (tag *IDTag) Save() error {
 			return err
 		}
 
-	} else if *fileType == "ogg" {
+	} else if *fileType == "ogg" || *fileType == "opus" {
 		if tag.codec == "vorbis" {
-			saveVorbisTags(tag)
+			return saveVorbisTags(tag)
 		} else if tag.codec == "opus" {
-			saveOpusTags(tag)
+			return saveOpusTags(tag)
 		}
 	}
 	return nil
