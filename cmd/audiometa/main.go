@@ -139,6 +139,8 @@ func main() {
 							tag.SetTrack(writeTag)
 						} else if cmdTag == "y" || cmdTag == "-y" || cmdTag == "-year" || cmdTag == "year" {
 							tag.SetYear(writeTag)
+						} else if cmdTag == "date" {
+							tag.SetDate(writeTag)
 						} else if cmdTag == "b" || cmdTag == "-b" || cmdTag == "bpm" || cmdTag == "-bpm" {
 							tag.SetBPM(writeTag)
 						} else {
@@ -157,6 +159,8 @@ func main() {
 					err = tag.Save()
 					if err != nil {
 						fmt.Println(err)
+					} else {
+						fmt.Println("Tags saved successfully.")
 					}
 				}
 
@@ -169,6 +173,8 @@ func main() {
 				err = tag.Save()
 				if err != nil {
 					fmt.Println(err)
+				} else {
+					fmt.Println("Tags cleared successfully.")
 				}
 
 			} else if mode == "h" || mode == "-h" || mode == "-help" || mode == "help" {
