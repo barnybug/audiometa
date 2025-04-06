@@ -147,6 +147,15 @@ func parse(filepath string) (*IDTag, error) {
 				resultTag.idTagExtended.publisher = ex.Text
 			}
 		}
+		exFramer = tag.GetLastFrame("TRCK")
+		if exFramer != nil {
+			ex, ok := exFramer.(mp3TagLib.TextFrame)
+			if !ok {
+				log.Fatal("Couldn't assert track number frame")
+			} else {
+				resultTag.track = ex.Text
+			}
+		}
 		pictures := tag.GetFrames(tag.CommonID("Attached picture"))
 		if len(pictures) > 0 {
 			pic := pictures[0].(mp3TagLib.PictureFrame)

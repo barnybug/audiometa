@@ -62,6 +62,11 @@ func (tag *IDTag) Save() error {
 		mp3Tag.AddFrame("TCOM", textFrame)
 		textFrame = mp3TagLib.TextFrame{
 			Encoding: mp3TagLib.EncodingUTF8,
+			Text:     tag.track,
+		}
+		mp3Tag.AddFrame("TRCK", textFrame)
+		textFrame = mp3TagLib.TextFrame{
+			Encoding: mp3TagLib.EncodingUTF8,
 			Text:     tag.idTagExtended.copyrightMsg,
 		}
 		mp3Tag.AddFrame("TCOP", textFrame)
